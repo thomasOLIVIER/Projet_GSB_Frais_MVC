@@ -30,6 +30,7 @@ class PdoGsb{
     	PdoGsb::$monPdo = new PDO(PdoGsb::$serveur.';'.PdoGsb::$bdd, PdoGsb::$user, PdoGsb::$mdp); 
 		PdoGsb::$monPdo->query("SET CHARACTER SET utf8");
 	}
+        
 	public function _destruct(){
 		PdoGsb::$monPdo = null;
 	}
@@ -85,6 +86,8 @@ class PdoGsb{
         return $laLigne;
     }
     
+    
+    
     /** 
      * Retourne la liste des visiteurs
      * 
@@ -96,14 +99,25 @@ class PdoGsb{
                 WHERE visiteur.id = fonction.id
                 AND intitule_fonc.fonction = fonction.fonction
                 WHERE intitule_fonc.libellefonc = 'visiteur'";
-        
-        $req = PdoGsb::$monPdo->query($sql);
-        $lesLignes = $req->fetchAll();
-        $req->closeCursor();
-        
-        return $lesLignes;
+        $ligneResultat = PdoGsb::$monPdo->query($sql);
+        return $ligneResultat;
+
     }
 
+    /**
+     * Retourne les fiches frais qui sont validées
+     * 
+     * @return $ligneResultat sous forme de tableau associatif content l'id, le nom ainsi que le prénom du visiteur, et le mois concerné.
+     */
+    public function getFichesFraisValidees(){
+        $req = "select * from fichefrais join visiteur on fichefrais.idvisiteur = visiteur.id and idetat = 'VA'";
+        $ligneResultat1 = PdoGsb::$monPdo->query($req);
+        $ligneResultat = $ligneResultat1->fetchall();
+        $req->execute(array('idVisiteur' => $idUtilisateur));
+        return $ligneResultat;
+    }
+    
+    
     /**
      * Retourne sous forme d'un tableau associatif toutes les lignes de frais hors forfait
      * concernées par les deux arguments
