@@ -22,6 +22,8 @@ class PdoGsb{
       	private static $mdp='' ;	
 	private static $monPdo;
 	private static $monPdoGsb=null;
+        
+        
 /**
  * Constructeur privé, crée l'instance de PDO qui sera sollicitée
  * pour toutes les méthodes de la classe
@@ -31,6 +33,7 @@ class PdoGsb{
 		PdoGsb::$monPdo->query("SET CHARACTER SET utf8");
 	}
         
+                
 	public function _destruct(){
 		PdoGsb::$monPdo = null;
 	}
@@ -110,10 +113,9 @@ class PdoGsb{
      * @return $ligneResultat sous forme de tableau associatif content l'id, le nom ainsi que le prénom du visiteur, et le mois concerné.
      */
     public function getFichesFraisValidees(){
-        $req = "select * from fichefrais join visiteur on fichefrais.idvisiteur = visiteur.id and idetat = 'VA'";
+        $req = "SELECT visiteur.id, visiteur.nom, visiteur.prenom, mois FROM fichefrais join visiteur on fichefrais.idvisiteur = visiteur.id and idetat = 'VA'";
         $ligneResultat1 = PdoGsb::$monPdo->query($req);
         $ligneResultat = $ligneResultat1->fetchall();
-        $req->execute(array('idVisiteur' => $idUtilisateur));
         return $ligneResultat;
     }
     
@@ -558,4 +560,3 @@ class PdoGsb{
     }
 }
 ?>
-}
