@@ -97,14 +97,9 @@ class PdoGsb{
      * @return tableau associatif
      */
     public function getLesVisiteurs() {
-        $sql = "SELECT visiteur.id, visiteur.nom, visiteur.prenom 
-                FROM visiteur 
-                WHERE visiteur.id = fonction.id
-                AND intitule_fonc.fonction = fonction.fonction
-                WHERE intitule_fonc.libellefonc = 'visiteur'";
-        $ligneResultat = PdoGsb::$monPdo->query($sql);
+        $req = "select id, nom, prenom from visiteur order by nom";
+        $ligneResultat = PdoGsb::$monPdo->query($req);
         return $ligneResultat;
-
     }
 
     /**
