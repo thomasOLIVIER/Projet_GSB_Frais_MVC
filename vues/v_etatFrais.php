@@ -54,6 +54,9 @@
                 <td><input type="text" name="date" readOnly="readOnly" value="<?php echo $date; ?>"/></td>
                 <td><input type="text" name="libelle" readOnly="readOnly" value="<?php echo $libelle; ?>"/></td>
                 <td><input type="text" name="montant" readOnly="readOnly" value="<?php echo $montant; ?>"/></td>
+                
+                <!-- Affiche les boutons qui sont dans c_validerFrais.php dans le case voirEtatFrais -->
+                
                 <?php echo $report . $refuser; ?>
             </form>
             </tr>
@@ -63,11 +66,15 @@
     </table>
 
 </div>
+
 <?php
+
+// OLIVIER Thomas, $valider => voir c_validerFrais.php dans le case voirEtatFrais
+
 if ($valider == 1) {
     ?>
-    <form method="post" action="index.php?uc=validationFicheFrais&action=validFiche">
-        <input type="submit" name="validFrais" value="Valider"/>
+    <form method="post" action="index.php?uc=validationFicheFrais&action=validerFiche">
+        <input type="submit" name="validerFiche" value="Valider"/>
     </form>
     <?php
 } elseif ($valider == 2) {

@@ -97,9 +97,12 @@ class PdoGsb{
      * @return tableau associatif
      */
     public function getLesVisiteurs() {
-        $req = "select id, nom, prenom from visiteur order by nom";
-        $ligneResultat = PdoGsb::$monPdo->query($req);
-        return $ligneResultat;
+        $sql = "select id, nom, prenom from visiteur order by nom";
+        $req = PdoGsb::$monPdo->query($sql);
+        $lesLignes = $req->fetchAll();
+        $req->closeCursor();
+        
+        return $lesLignes;
     }
 
     /**
@@ -108,10 +111,13 @@ class PdoGsb{
      * @return $ligneResultat sous forme de tableau associatif content l'id, le nom ainsi que le prénom du visiteur, et le mois concerné.
      */
     public function getFichesFraisValidees(){
-        $req = "SELECT visiteur.id, visiteur.nom, visiteur.prenom, mois FROM fichefrais join visiteur on fichefrais.idvisiteur = visiteur.id and idetat = 'VA'";
-        $ligneResultat1 = PdoGsb::$monPdo->query($req);
-        $ligneResultat = $ligneResultat1->fetchall();
-        return $ligneResultat;
+        $sql = "SELECT visiteur.id, visiteur.nom, visiteur.prenom, mois FROM fichefrais,visiteur Where fichefrais.idutilisateur = visiteur.id and idetat = 'VA'";
+        $req = PdoGsb::$monPdo->prepare($sql);
+        //$req->execute(array('idVisiteur' => $idVisiteur, 'mois' => $mois));
+        $lesLignes = $req->fetchAll();
+        $req->closeCursor();
+        
+        return $lesLignes;
     }
     
     
@@ -141,6 +147,37 @@ class PdoGsb{
         
         return $lesLignes;
     }
+    
+        /**
+     * Retourne les montant de chaque frais forfait rangé dans l'ordre alphabétique dans un tableau
+     * 
+     */
+    public function getLesMontants(){
+        $sql = "select montant from fraisforfait order by id";
+        $req = PdoGsb::$monPdo->prepare($sql);
+        $lesLignes = $req->fetchAll();
+        $req->closeCursor();
+        
+        return $lesLignes;
+    }
+    
+    
+        /**
+     * Retourne les quantité de chaque frais rangé dans l'ordre alphabétique dans un tableau
+     * 
+     * @param $idVisiteur id du visiteur
+     * @param $mois sous la forme aaamm
+     */
+    public function getLesQuantites($idVisiteur, $mois){
+        $sql = "select quantite from lignefraisforfait where idvisiteur = '" . $idVisiteur . "' and mois = '" . $mois . "' order by idfraisforfait";
+        $req = PdoGsb::$monPdo->prepare($sql);
+        $req->execute(array('idVisiteur' => $idVisiteur, 'mois' => $mois));
+        $lesLignes = $req->fetchAll();
+        $req->closeCursor();
+        
+        return $lesLignes;
+    }
+    
     
     /**
      * Retourne le nombre de justificatif d'un visiteur pour un mois donné
@@ -210,8 +247,10 @@ class PdoGsb{
         $lesCles = array_keys($lesFrais);
         foreach ($lesCles as $unIdFrais) {
             $qte = $lesFrais[$unIdFrais];
-            $sql = "UPDATE lignefraisforfait SET quantite = :qte
-                    WHERE idUtilisateur = :idVisiteur AND mois = :mois AND idFraisForfait = :unIdFrais";
+            $sql = "update lignefraisforfait set lignefraisforfait.quantite = $qte
+			where lignefraisforfait.idvisiteur = '$idVisiteur' and lignefraisforfait.mois = '$mois'
+			and lignefraisforfait.idfraisforfait = '$unIdFrais'";
+                        
             $req = PdoGsb::$monPdo->prepare($sql);
             $req->execute(array('qte' => $qte, 'idVisiteur' => $idVisiteur, 'mois' => $mois, 'unIdFrais' => $unIdFrais));
             $req->closeCursor();
@@ -492,6 +531,15 @@ class PdoGsb{
         $req->execute(array('etat' => $etat, 'idVisiteur' => $idVisiteur, 'mois' => $mois));
         $req->closeCursor();
     }
+    
+     public function majEtatFicheFrais2($idVisiteur, $mois, $etat, $nbJust) {
+        $req = "update ficheFrais set idEtat = '$etat', nbJustificatifs='$nbJust',  dateModif = now() 
+		where fichefrais.idvisiteur ='$idVisiteur' and fichefrais.mois = '$mois'";
+        PdoGsb::$monPdo->exec($req);
+    }
+    
+    
+    
      /**
      * Retourne les fiches frais qui sont validées
      * 
@@ -511,10 +559,13 @@ class PdoGsb{
      * 
      */
     public function getMontantHorsForfait($idVisiteur, $mois){
-        $req = "select sum(montant) from lignefraishorsforfait where idvisiteur = '" . $idVisiteur . "' and mois = '" . $mois . "'";
-        $ligneResultat = PdoGsb::$monPdo->query($req);
-        $fetch = $ligneResultat->fetch();
-        return $fetch;
+        $sql = "select sum(montant) from lignefraishorsforfait where idvisiteur = '" . $idVisiteur . "' and mois = '" . $mois . "'";
+        $req = PdoGsb::$monPdo->prepare($sql);
+        $req->execute(array('idVisiteur' => $idVisiteur, 'mois' => $mois));
+        $laLigne = $req->fetch();
+        $req->closeCursor();
+        
+        return $laLigne;
     }
     
     /**
