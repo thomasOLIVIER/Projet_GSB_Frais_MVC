@@ -27,18 +27,42 @@
             ?>
             Comptable:<br/>
             <?php echo $_SESSION['prenom'] . " " . $_SESSION['nom']; ?>
-            </li>
-            <li class="smenu">
-                <a href="index.php?uc=validationFicheFrais&action=selectionnerVisiteur" title="Valider fiche de frais">Valider fiche de frais</a>
-            </li>
-            <li class="smenu">
-                <a href="index.php?uc=suiviPaiement&action=selectionnerFrais" title="Suivie du paiement des fiches de frais">Suivi fiche de frais</a>
-            </li>
+            
+                    
+            <ul class="ca-menu">
+                    <li>
+                        <a href="index.php?uc=validationFicheFrais&action=selectionnerVisiteur" title="Administration des thèmes">
+                            <div class="ca-content">
+                                <h2 class="ca-main">Valider</h2>
+                                <h3 class="ca-sub">fiche de frais</h3>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="index.php?uc=suiviPaiement&action=selectionnerFrais">
+                            <div class="ca-content">
+                                <h2 class="ca-main">Suivi</h2>
+                                <h3 class="ca-sub">fiche de frais</h3>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="index.php?uc=connexion&action=deconnexion">
+                            <div class="ca-content">
+                                <h2 class="ca-main">D&eacute;connexion</h2>
+                                <h3 class="ca-sub"></h3>
+                            </div>
+                        </a>
+                    </li>
+                </ul>
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
+            
+            
+            
+            
+            
             <?php
         }
         ?>
-        <li class="smenu">
-            <a href="index.php?uc=connexion&action=deconnexion" title="Se déconnecter">D&eacute;connexion</a>
-        </li>
     </ul>
 </div>
