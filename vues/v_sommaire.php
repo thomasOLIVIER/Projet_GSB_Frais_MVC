@@ -14,13 +14,37 @@
                 ?>
                 Visiteur :<br/>
                 <?php echo $_SESSION['prenom'] . "  " . $_SESSION['nom']; ?>
-            </li>
-            <li class="smenu">
-                <a href="index.php?uc=gererFrais&action=saisirFrais" title="Saisie fiche de frais ">Saisie fiche de frais</a>
-            </li>
-            <li class="smenu">
-                <a href="index.php?uc=etatFrais&action=selectionnerMois" title="Consultation de mes fiches de frais">Mes fiches de frais</a>
-            </li>
+ 
+            
+            <ul class="ca-menu">
+                    <li>
+                        <a href="index.php?uc=gererFrais&action=saisirFrais" title="Administration des thèmes">
+                            <div class="ca-content">
+                                <h2 class="ca-main">Saisie</h2>
+                                <h3 class="ca-sub">fiche de frais</h3>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="index.php?uc=etatFrais&action=selectionnerMois">
+                            <div class="ca-content">
+                                <h2 class="ca-main">Mes fiches de frais</h2>
+                                <h3 class="ca-sub"></h3>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="index.php?uc=connexion&action=deconnexion">
+                            <div class="ca-content">
+                                <h2 class="ca-main">D&eacute;connexion</h2>
+                                <h3 class="ca-sub"></h3>
+                            </div>
+                        </a>
+                    </li>
+                </ul>
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
+            
+            
             <?php
         }
         if ($_SESSION['etat'] == 'Comptable') {
