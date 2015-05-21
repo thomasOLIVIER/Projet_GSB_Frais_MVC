@@ -2,13 +2,12 @@
 
 include("vues/v_sommaire.php");
 $action = $_REQUEST['action'];
-
 $lesFichesFrais = $pdo->getFichesFraisValidees();
+
 include("vues/v_lstFicheFrais.php");
-
-
 switch ($action) {
     case 'voirFicheFrais':
+
         $idEtMois = explode("/", $_POST['lstFicheFrais']);
         $idVisiteur = $idEtMois[0];
         $_SESSION['idVisiteur'] = $idVisiteur;

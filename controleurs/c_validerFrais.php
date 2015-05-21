@@ -2,8 +2,8 @@
 
 include('vues/v_sommaire.php');
 $action = $_REQUEST['action'];
-
 $tabVisiteurs = $pdo->getLesVisiteurs();
+
 include ('vues/v_listeVisiteur.php');
 
 switch ($action) {
@@ -27,24 +27,19 @@ switch ($action) {
         $report = "<td><input type='submit' name='btnReportRefus' value='Reporter'><br/>";
         $refuser = "<input type='submit' name='btnReportRefus' value='Refuser'></td>";
         $valider = 1;
-        
-        // Permet de verifier si il y a bien présence de fiche frais forfait ou de fiche frais hors forfait
-        
         if((empty($lesFraisForfait)) && (empty($lesFraisHorsForfait))) {
             include("vues/v_pasDeFicheFrais.php");
         } else {
             include("vues/v_etatFrais.php");
         }
         break;
-        
-    case "validerFiche":
-        $idVisiteur = $_SESSION['idVisiteur'];  
+    case "validFrais":
+        $idVisiteur = $_SESSION['idVisiteur'];
         $lesFrais = $_REQUEST['lesFrais'];
         $leMois = $_SESSION['leMois'];
         $pdo->majFraisForfait($idVisiteur, $leMois, $lesFrais);
         include("vues/v_affichModif.php");
         break;
-    
     case "reportRefus":
         $reportRefus = $_POST['btnReportRefus'];
         $id = $_POST['id'];
@@ -61,33 +56,21 @@ switch ($action) {
             }
         }
         break;
-    case "validerFrais": {
-            $leVisiteur = $_SESSION['idVisiteur'];
-            $leMois = $_SESSION['leMois'];
-            $nbJustificatifs = $_REQUEST['nbJustificatifs'];
-            $rs = $pdo->majEtatFicheFrais2($leVisiteur, $leMois, "VA", $nbJustificatifs);
-            $tabMontant = $pdo->getLesMontants();
-            
-            $tabQuantites = $pdo->getLesQuantites($leVisiteur, $leMois);
-            $montant = 0;
-            for ($i = 0; $i < 4; $i++) {
-                $montant += ($tabMontant[$i][0] * $tabQuantites[$i][0]);
-            }
-            $montantHorsForfait = $pdo->getMontantHorsForfait($leVisiteur, $leMois);
-           
-            $montant += $montantHorsForfait[0];
-            $pdo->majMontantValide($leVisiteur, $leMois, $montant);
-            if ($rs == 0) {
-                ajouterErreur('La Fiche frais a bien été validé!');
-                $type = 1;
-                include("vues/v_erreurs.php");
-            } else {
-                ajouterErreur("La Fiche frais n'a pas été validé!");
-                include("vues/v_erreurs.php");
-            }
-            break;
+    case "validFiche":
+        $idVisiteur = $_SESSION['idVisiteur'];
+        $mois = $_SESSION['leMois'];
+        $pdo->majEtatFicheFrais($idVisiteur, $mois, 'VA');
+        $tabMontant = $pdo->getLesMontants();
+        $tabQuantites = $pdo->getLesQuantites($idVisiteur, $mois);
+        $montant = 0;
+        for($i=0; $i<4; $i++){
+            $montant += ($tabMontant[$i][0] * $tabQuantites[$i][0]);
         }
+        $montantHorsForfait = $pdo->getMontantHorsForfait($idVisiteur, $mois);
+        $montant += $montantHorsForfait[0];
+        $pdo->majMontantValide($idVisiteur, $mois, $montant);
         include("vues/v_valide.php");
+        break;
 }
 include("vues/v_pied.php");
 ?>

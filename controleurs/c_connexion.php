@@ -18,12 +18,11 @@ switch ($action) {
                 include("vues/v_connexion.php");
             } else {
                 $id = $visiteur['id'];
-			$nom =  $visiteur['nom'];
-			$prenom = $visiteur['prenom'];
-			$libelleFonc = $visiteur['libelleFonc'];
-			connecter($id,$nom,$prenom,$libelleFonc);
-                        include("vues/v_sommaire.php");
-                        include("vues/v_accueil.php");
+                $nom = $visiteur['nom'];
+                $prenom = $visiteur['prenom'];
+                $etat = $visiteur['libelleFonc'];
+                connecter($id, $nom, $prenom, $etat);
+                include("vues/v_sommaire.php");
             }
             break;
         }
